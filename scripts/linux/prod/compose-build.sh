@@ -1,0 +1,1 @@
+docker-compose -p telzir-prod-stack -f docker-compose-prod.yaml up -d --build

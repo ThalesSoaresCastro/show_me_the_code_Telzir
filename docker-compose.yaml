@@ -1,0 +1,63 @@
+version: '3'
+
+services:
+  postgres-db:
+    image: postgres
+    container_name: 'postgres-db'
+    env_file: ./.env
+    environment:
+        - POSTGRES_DB=$POSTGRES_DATABASE
+        - POSTGRES_USER=$POSTGRES_USER
+        - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
+    ports:
+      - $POSTGRES_LOCAL_PORT:$POSTGRES_DOCKER_PORT
+    volumes:
+      - ./Postgres:/var/lib/postgresql/data 
+    #networks:
+    #  - telzir
+    restart: 'always'
+    expose: 
+      - $POSTGRES_LOCAL_PORT
+
+  postgres-dev:
+    image: postgres
+    container_name: 'postgres-dev'
+    env_file: ./.env
+    environment:
+        - POSTGRES_DB=$POSTGRES_DEV_DATABASE
+        - POSTGRES_USER=$POSTGRES_DEV_USER
+        - POSTGRES_PASSWORD=$POSTGRES_DEV_PASSWORD
+    ports:
+      - $POSTGRES_DEV_LOCAL_PORT:$POSTGRES_DEV_DOCKER_PORT
+    volumes:
+      - ./PostgresDev:/var/lib/postgresql/data 
+    #networks:
+    #  - telzir
+    restart: 'always'
+    expose: 
+      - $POSTGRES_DEV_LOCAL_PORT
+
+  postgres-test:
+    image: postgres
+    container_name: 'postgres-test'
+    env_file: ./.env
+    environment:
+        - POSTGRES_DB=$POSTGRES_TEST_DATABASE
+        - POSTGRES_USER=$POSTGRES_TEST_USER
+        - POSTGRES_PASSWORD=$POSTGRES_TEST_PASSWORD
+    ports:
+      - $POSTGRES_TEST_LOCAL_PORT:$POSTGRES_TEST_DOCKER_PORT
+    volumes:
+      - ./PostgresTest:/var/lib/postgresql/data 
+    #networks:
+    #  - telzir
+    restart: 'always'
+    expose: 
+      - $POSTGRES_TEST_LOCAL_PORT
+
+
+volumes:
+  Postgres: null
+  PostgresDev: null
+  PostgresTest: null
+  

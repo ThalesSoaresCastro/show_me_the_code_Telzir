@@ -1,0 +1,1 @@
+docker-compose -p telzir-test-stack -f docker-compose-test.yaml up -d --build

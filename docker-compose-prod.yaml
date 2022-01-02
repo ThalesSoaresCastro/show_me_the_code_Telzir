@@ -1,0 +1,55 @@
+version: '3'
+
+services:
+  postgres-db:
+    image: postgres
+    container_name: 'postgres-db'
+    env_file: ./.env
+    environment:
+        - POSTGRES_DB=$POSTGRES_DATABASE
+        - POSTGRES_USER=$POSTGRES_USER
+        - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
+    ports:
+      - $POSTGRES_LOCAL_PORT:$POSTGRES_DOCKER_PORT
+    volumes:
+      - ./Postgres:/var/lib/postgresql/data 
+    networks:
+      - telzir-prod
+    restart: 'always'
+    expose: 
+      - $POSTGRES_LOCAL_PORT
+  api:
+    container_name: 'api-prod'
+    build: 
+      context: './api'
+      dockerfile: Dockerfile-Prod
+    env_file: ./.env
+    environment:
+      #PROD-DEV 
+      - USER_NAME_DATABASE=$POSTGRES_USER
+      - USER_PASSWORD_DATABASE=$POSTGRES_PASSWORD
+      - DATABASE_NAME=$POSTGRES_DATABASE
+      - DATABASE_PORT=$POSTGRES_DOCKER_PORT
+      - API_DBHOST=$POSTGRES_HOST
+      #PORTAPI
+      - API_PORT=$PORT_DOCKER_API
+    command: bash -c 'while !</dev/tcp/$POSTGRES_HOST/$POSTGRES_DOCKER_PORT; do sleep 5; done;npm run build; sleep 10;npm run create:StringDev;sleep 5;npm run db:createTables; sleep 6;npm run start-build;'
+    volumes:
+      - ./api:/app
+      - /app/node_modules
+    ports:
+      - $PORT_LOCAL_API:$PORT_DOCKER_API
+    depends_on:
+      - 'postgres-db'
+    expose:
+      - $PORT_LOCAL_API
+    networks:
+      - telzir-prod
+
+volumes:
+  Postgres: null
+
+networks:
+  telzir-prod:
+    driver: bridge
+  

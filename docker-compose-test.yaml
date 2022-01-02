@@ -1,0 +1,62 @@
+version: '3'
+
+services:
+  postgres-test:
+    image: postgres
+    container_name: 'postgres-test'
+    env_file: ./.env
+    environment:
+        - POSTGRES_DB=$POSTGRES_TEST_DATABASE
+        - POSTGRES_USER=$POSTGRES_TEST_USER
+        - POSTGRES_PASSWORD=$POSTGRES_TEST_PASSWORD
+    ports:
+      - $POSTGRES_TEST_LOCAL_PORT:$POSTGRES_TEST_DOCKER_PORT
+    volumes:
+      - ./PostgresTest:/var/lib/postgresql/data 
+    networks:
+      - telzir-test
+    restart: 'always'
+    expose: 
+      - $POSTGRES_TEST_LOCAL_PORT
+
+  api:
+    container_name: 'api'
+    build: 
+      context: './api'
+      dockerfile: Dockerfile-Dev
+    env_file: ./.env
+    environment:
+      #DEV 
+      - USER_NAME_DATABASE=$POSTGRES_DEV_USER
+      - USER_PASSWORD_DATABASE=$POSTGRES_DEV_PASSWORD
+      - DATABASE_NAME=$POSTGRES_DEV_DATABASE
+      - DATABASE_PORT=$POSTGRES_DEV_DOCKER_PORT
+      - API_DBHOST=$POSTGRES_DEV_HOST
+      #TEST
+      - TEST_USER_NAME_DATABASE=$POSTGRES_TEST_USER
+      - TEST_USER_PASSWORD_DATABASE=$POSTGRES_TEST_PASSWORD
+      - TEST_DATABASE_NAME=$POSTGRES_TEST_DATABASE
+      - TEST_DATABASE_PORT=$POSTGRES_TEST_DOCKER_PORT
+      - TEST_API_DBHOST=$POSTGRES_TEST_HOST
+      #PORTAPI
+      - API_PORT=$PORT_DOCKER_API
+    command: bash -c 'while !</dev/tcp/$POSTGRES_TEST_HOST/$POSTGRES_TEST_DOCKER_PORT; do sleep 5; done; npm run create:testEnv; sleep 6;npm run db:createTables; sleep 6;npm run test;sleep 360;'
+    volumes:
+      - ./api:/app
+      - /app/node_modules
+    ports:
+      - $PORT_LOCAL_API:$PORT_DOCKER_API
+    depends_on:
+      - 'postgres-test'
+    expose:
+      - $PORT_LOCAL_API
+    networks:
+      - telzir-test
+
+volumes:
+  PostgresTest: null
+
+networks:
+  telzir-test:
+    driver: bridge
+  
