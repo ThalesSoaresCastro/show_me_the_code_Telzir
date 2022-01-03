@@ -1,0 +1,17 @@
+FROM node:17.3.0
+
+RUN mkdir -p /app
+
+ENV PORT 5051
+
+WORKDIR /app
+
+COPY package.json /app/
+COPY package-lock.json /app/
+
+COPY tsconfig.json /app/
+COPY . /app/
+
+RUN npm install
+
+EXPOSE 5051
