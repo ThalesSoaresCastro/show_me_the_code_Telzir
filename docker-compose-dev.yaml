@@ -52,7 +52,28 @@ services:
       - $PORT_LOCAL_API
     networks:
       - telzir-dev
-      
+
+  client:
+    env_file: ./.env
+    container_name: 'client-dev'
+    build: 
+      context: './client'
+      dockerfile: Dockerfile-Dev
+    command: bash -c 'while !</dev/tcp/api-dev/$PORT_LOCAL_API; do sleep 5; done;npm run dev;'
+    environment:
+      - HOST_API_CLIENT='api-dev'
+    volumes:
+      - ./client:/usr/src/app/
+      - /usr/src/app/node_modules
+      - /usr/src/app/.next
+    ports:
+      - $PORT_LOCAL_CLIENT:$PORT_DOCKER_CLIENT
+    expose:
+      - $PORT_LOCAL_CLIENT
+    depends_on:
+      - 'api-dev'
+    networks:
+      - telzir-dev      
 volumes:
   PostgresDev: null
   
