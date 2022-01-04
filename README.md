@@ -88,3 +88,5 @@ Caso prefira, os arquivos do docker-compose podem ser executados diretamente com
 
 Acessado em [http://localhost:5050](http://localhost:5050)
 
+Documentação da api pode ser acessada em [http://localhost:5050/api-docs/](http://localhost:5050/api-docs/)
+

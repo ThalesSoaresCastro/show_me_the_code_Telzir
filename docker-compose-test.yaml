@@ -25,6 +25,7 @@ services:
       context: './api'
       dockerfile: Dockerfile-Dev
     env_file: ./.env
+    restart: 'always'
     environment:
       #DEV 
       - USER_NAME_DATABASE=$POSTGRES_DEV_USER

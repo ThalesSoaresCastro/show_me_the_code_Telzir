@@ -25,6 +25,7 @@ services:
       context: './api'
       dockerfile: Dockerfile-Dev
     env_file: ./.env
+    restart: 'always'
     environment:
       #PROD-DEV 
       - USER_NAME_DATABASE=$POSTGRES_DEV_USER
@@ -60,6 +61,7 @@ services:
       context: './client'
       dockerfile: Dockerfile-Dev
     command: bash -c 'while !</dev/tcp/api-dev/$PORT_LOCAL_API; do sleep 5; done;npm run dev;'
+    restart: 'always'
     environment:
       - HOST_API_CLIENT='api-dev'
     volumes:
