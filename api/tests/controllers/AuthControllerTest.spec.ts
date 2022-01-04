@@ -2,8 +2,9 @@ import AuthController from "@/controllers/AuthController";
 import prismaCLient from '@/prisma';
 import request from 'supertest';
 import app from '@/index';
-
 import bcrypt from 'bcryptjs';
+
+import createUserTest from '@tools/UserCreateTools';
 
 interface IUser {
     nome: string;
@@ -21,14 +22,10 @@ const salt:number = 8;
 describe('Test AuthService', ()=>{
 
     beforeAll(async()=>{
-        const userTest:IUser = {
-            nome: "teste",
-            email: "teste@mail.com",
-            //password:"password"
-            password:bcrypt.hashSync("password", salt)
-        }
-        await prismaCLient.user.create({data:userTest});
-        console.log('User Created.');
+    
+        //chamando função para criar usuário
+        await createUserTest();
+        console.log("User Created.");
     });
 
     afterAll(async()=>{
