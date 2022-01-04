@@ -1,7 +1,5 @@
 import PriceListService from "@/services/PriceListService";
-
 import { prismaMock } from "@/SingletonMock";
-
 
 interface PriceListElementMock {
     id: string;

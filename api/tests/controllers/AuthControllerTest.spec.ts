@@ -1,10 +1,7 @@
-import AuthController from "@/controllers/AuthController";
 import prismaCLient from '@/prisma';
 import request from 'supertest';
 import app from '@/index';
-import bcrypt from 'bcryptjs';
-
-import createUserTest from '@tools/UserCreateTools';
+import UserCreateTools from "@tools/UserCreateTools";
 
 interface IUser {
     nome: string;
@@ -22,15 +19,17 @@ const salt:number = 8;
 describe('Test AuthService', ()=>{
 
     beforeAll(async()=>{
-    
         //chamando função para criar usuário
-        await createUserTest();
+        //await createUserTest;
+        await UserCreateTools.createUserTest();
         console.log("User Created.");
+        //console.log('OBJ: ', obj);
     });
 
     afterAll(async()=>{
         await prismaCLient.user.deleteMany();    
         console.log("Deleted all elements.");
+        await prismaCLient.$disconnect();
     });
 
     

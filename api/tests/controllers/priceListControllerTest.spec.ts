@@ -1,7 +1,8 @@
+import prismaCLient from '@/prisma';
 import request from 'supertest';
 import app from '@/index';
+import UserCreateTools from "@tools/UserCreateTools";
 
-import prismaCLient from '@/prisma';
 
 interface PriceList {
     origin: string;
@@ -9,15 +10,44 @@ interface PriceList {
     price: number;
 }
 
+interface ILoginUser {
+    email: string;
+    password: string;
+}
+
+interface IUserCreated {
+    id: string;
+    nome: string;
+    email: string;
+    created_at: Date;
+}
+
+interface IUserAuthResponse {
+    user:IUserCreated;
+    token:string;
+};
+
+let userCreatedAuthTest:IUserAuthResponse;
+
 describe('Test PriceListController',()=>{
     afterAll(async()=>{
         //delete all test data
         await prismaCLient.priceList.deleteMany();
-    
         console.log("Deleted all elements.");
     
+        await prismaCLient.user.deleteMany();
+        console.log("Deleted all users.");
+        
         await prismaCLient.$disconnect();
-    
+    });
+
+    beforeAll(async()=>{
+        //criando usuário...
+        await UserCreateTools.createUserTest();
+
+        //fazendo autenticação do usuário criado para obter o token
+        userCreatedAuthTest = await UserCreateTools.authUserTest();    
+        console.log('User created and auth');
     });
 
     describe('Insert new element', ()=>{
@@ -28,9 +58,11 @@ describe('Test PriceListController',()=>{
                 price: 1.2
             }; 
 
+            //add element
             const resp = await request(app)
                                 .post('/addelement')
-                                .send(newElement);
+                                .send(newElement)
+                                .auth(userCreatedAuthTest.token, {type: 'bearer'});
             
             expect(resp.statusCode).toEqual(422);
             
@@ -45,7 +77,8 @@ describe('Test PriceListController',()=>{
 
             const resp = await request(app)
                                 .post('/addelement')
-                                .send(newElement);
+                                .send(newElement)
+                                .auth(userCreatedAuthTest.token, {type: 'bearer'});
             
             expect(resp.statusCode).toEqual(422);
             
@@ -60,7 +93,8 @@ describe('Test PriceListController',()=>{
 
             const resp = await request(app)
                                 .post('/addelement')
-                                .send(newElement);
+                                .send(newElement)
+                                .auth(userCreatedAuthTest.token, {type: 'bearer'});
             
             expect(resp.statusCode).toEqual(422);
             
@@ -73,9 +107,11 @@ describe('Test PriceListController',()=>{
                 price: -2.2
             }; 
 
+            //add element
             const resp = await request(app)
                                 .post('/addelement')
-                                .send(newElement);
+                                .send(newElement)
+                                .auth(userCreatedAuthTest.token, {type: 'bearer'});
             
             expect(resp.statusCode).toEqual(422);
             
@@ -87,9 +123,11 @@ describe('Test PriceListController',()=>{
                 price: 1.2
             }; 
 
+            //add element
             const resp = await request(app)
                                 .post('/addelement')
-                                .send(newElement);
+                                .send(newElement)
+                                .auth(userCreatedAuthTest.token, {type: 'bearer'});
             
             expect(resp.statusCode).toEqual(422);
             
@@ -101,9 +139,11 @@ describe('Test PriceListController',()=>{
                 price: 1.2
             }; 
 
+            //add element
             const resp = await request(app)
                                 .post('/addelement')
-                                .send(newElement);
+                                .send(newElement)
+                                .auth(userCreatedAuthTest.token, {type: 'bearer'});
             
             expect(resp.statusCode).toEqual(422);
             
@@ -115,9 +155,11 @@ describe('Test PriceListController',()=>{
                 destiny: '017'
             }; 
 
+            //add element
             const resp = await request(app)
                                 .post('/addelement')
-                                .send(newElement);
+                                .send(newElement)
+                                .auth(userCreatedAuthTest.token, {type: 'bearer'});
             
             expect(resp.statusCode).toEqual(422);
             
@@ -130,9 +172,11 @@ describe('Test PriceListController',()=>{
                 price: 1.2
             }; 
 
+            //add element
             const resp = await request(app)
                                 .post('/addelement')
-                                .send(newElement);
+                                .send(newElement)
+                                .auth(userCreatedAuthTest.token, {type: 'bearer'});
             
             let objResult = {
                 origin:resp.body.element.origin,
@@ -155,12 +199,14 @@ describe('Test PriceListController',()=>{
 
             const respOne = await request(app)
                                 .post('/addelement')
-                                .send(newElement);
+                                .send(newElement)
+                                .auth(userCreatedAuthTest.token, {type: 'bearer'});
             
 
             const respExists = await request(app)
                             .post('/addelement')
-                            .send(newElement);
+                            .send(newElement)
+                            .auth(userCreatedAuthTest.token, {type: 'bearer'});
             
 
             let objResult = {
@@ -191,7 +237,8 @@ describe('Test PriceListController',()=>{
 
             const resp = await request(app)
                                 .put(`/updateelement/${id}`)
-                                .send(newElement);
+                                .send(newElement)
+                                .auth(userCreatedAuthTest.token, {type: 'bearer'});
             
             expect(resp.statusCode).toEqual(422);
             
@@ -206,7 +253,8 @@ describe('Test PriceListController',()=>{
 
             const resp = await request(app)
                                 .put(`/updateelement/${id}`)
-                                .send(newElement);
+                                .send(newElement)
+                                .auth(userCreatedAuthTest.token, {type: 'bearer'});
             
             expect(resp.statusCode).toEqual(422);
             
@@ -221,7 +269,8 @@ describe('Test PriceListController',()=>{
 
             const resp = await request(app)
                                 .put(`/updateelement/${id}`)
-                                .send(newElement);
+                                .send(newElement)
+                                .auth(userCreatedAuthTest.token, {type: 'bearer'});
             
             expect(resp.statusCode).toEqual(422);
             
@@ -236,7 +285,8 @@ describe('Test PriceListController',()=>{
 
             const resp = await request(app)
                                 .put(`/updateelement/${id}`)
-                                .send(newElement);
+                                .send(newElement)
+                                .auth(userCreatedAuthTest.token, {type: 'bearer'});
             
             expect(resp.statusCode).toEqual(422);
             
@@ -250,7 +300,8 @@ describe('Test PriceListController',()=>{
 
             const resp = await request(app)
                                 .put(`/updateelement/${id}`)
-                                .send(newElement);
+                                .send(newElement)
+                                .auth(userCreatedAuthTest.token, {type: 'bearer'});
             
             expect(resp.statusCode).toEqual(422);
             
@@ -264,7 +315,8 @@ describe('Test PriceListController',()=>{
 
             const resp = await request(app)
                                 .put(`/updateelement/${id}`)
-                                .send(newElement);
+                                .send(newElement)
+                                .auth(userCreatedAuthTest.token, {type: 'bearer'});
             
             expect(resp.statusCode).toEqual(422);
             
@@ -278,7 +330,8 @@ describe('Test PriceListController',()=>{
 
             const resp = await request(app)
                                 .put(`/updateelement/${id}`)
-                                .send(newElement);
+                                .send(newElement)
+                                .auth(userCreatedAuthTest.token, {type: 'bearer'});
             
             expect(resp.statusCode).toEqual(422);
             
@@ -294,7 +347,8 @@ describe('Test PriceListController',()=>{
             //add Element
             const respadd = await request(app)
                                 .post('/addelement')
-                                .send(newElement);
+                                .send(newElement)
+                                .auth(userCreatedAuthTest.token, {type: 'bearer'});
             
             let elementCreated = respadd.body.element;
 
@@ -303,7 +357,8 @@ describe('Test PriceListController',()=>{
 
             const resp = await request(app)
                                 .put(`/updateelement/${elementCreated.id}`)
-                                .send(newElement);
+                                .send(newElement)
+                                .auth(userCreatedAuthTest.token, {type: 'bearer'});
 
             let objResult = {
                 origin:resp.body.element.origin,
@@ -325,7 +380,8 @@ describe('Test PriceListController',()=>{
             }; 
             const resp = await request(app)
                                 .put("/updateelement/er12weqwe")
-                                .send(newElement);
+                                .send(newElement)
+                                .auth(userCreatedAuthTest.token, {type: 'bearer'});
                   
             
             expect(resp.statusCode).toEqual(400);
@@ -341,7 +397,8 @@ describe('Test PriceListController',()=>{
         test('Element not exists.', async() => {
             //Deleted Element
             const resp = await request(app)
-                                .delete("/deleteelement/er12weqwe");
+                                .delete("/deleteelement/er12weqwe")
+                                .auth(userCreatedAuthTest.token, {type: 'bearer'});
                   
             
             expect(resp.statusCode).toEqual(400);
@@ -360,13 +417,15 @@ describe('Test PriceListController',()=>{
             //add Element
             const respadd = await request(app)
                                 .post('/addelement')
-                                .send(newElement);
+                                .send(newElement)
+                                .auth(userCreatedAuthTest.token, {type: 'bearer'});
             
             let elementCreated = respadd.body.element;
 
             //Deleted Element
             const resp = await request(app)
-                                .delete(`/deleteelement/${elementCreated.id}`);
+                                .delete(`/deleteelement/${elementCreated.id}`)
+                                .auth(userCreatedAuthTest.token, {type: 'bearer'});
 
             let objResult = {
                 origin:resp.body.element.origin,
@@ -406,7 +465,8 @@ describe('Test PriceListController',()=>{
             //add Element
             const respadd = await request(app)
                                 .post('/addelement')
-                                .send(newElement);
+                                .send(newElement)
+                                .auth(userCreatedAuthTest.token, {type: 'bearer'});
             
             let elementCreated = respadd.body.element;
 
@@ -439,12 +499,14 @@ describe('Test PriceListController',()=>{
             //add Element
             const respadd = await request(app)
                                 .post('/addelement')
-                                .send(newElement);
+                                .send(newElement)
+                                .auth(userCreatedAuthTest.token, {type: 'bearer'});
             
 
-            //Deleted Element
+            //All Elements
             const resp = await request(app)
                                 .get("/allelements");
+                                //.auth(, {type: 'bearer'});
 
             expect(resp.statusCode).toEqual(200);
             expect(resp.body.message).toEqual('All elements.');
