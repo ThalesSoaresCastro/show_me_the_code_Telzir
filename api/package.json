@@ -14,10 +14,12 @@
     "start-prod": "yarn build && node --trace-warnings -r ts-node/register/transpile-only -r tsconfig-paths/register ./dist/src/server.js"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.2",
     "@types/cors": "^2.8.12",
     "@types/dotenv": "^8.2.0",
     "@types/express": "^4.17.13",
     "@types/jest": "^27.0.3",
+    "@types/jsonwebtoken": "^8.5.6",
     "@types/morgan": "^1.9.3",
     "@types/node": "^17.0.5",
     "@types/supertest": "^2.0.11",
@@ -35,9 +37,11 @@
   },
   "dependencies": {
     "@prisma/client": "^3.7.0",
+    "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
     "express": "^4.17.2",
+    "jsonwebtoken": "^8.5.1",
     "morgan": "^1.10.0",
     "pg": "^8.7.1",
     "swagger-ui-express": "^4.3.0",

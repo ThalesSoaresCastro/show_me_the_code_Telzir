@@ -31,7 +31,7 @@ const createEnvFile= async() =>{
         envValues.dbHost = process.env.API_DBHOST;
     }
 
-    let StringConnection = `DATABASE_URL=postgresql://${envValues.userDBName}:${envValues.userDBPassword}@${envValues.dbHost}:${envValues.databasePort}/${envValues.databaseName}?schema=public`;
+    let StringConnection = `DATABASE_URL=postgresql://${envValues.userDBName}:${envValues.userDBPassword}@${envValues.dbHost}:${envValues.databasePort}/${envValues.databaseName}?schema=public\n\nSECRET=secret`;
     
     console.log(`STRINGCONNECTION: ${StringConnection}`);
 
