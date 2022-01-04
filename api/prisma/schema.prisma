@@ -1,0 +1,27 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  //prod
+  //url = "postgresql://postgres:postgres@localhost:6557/telzir_app?schema=public"
+  //dev
+  //url = "postgresql://postgresdev:postgresdev@localhost:6555/telzir_dev?schema=public"
+  //test
+  //url = "postgresql://postgrestest:postgrestest@localhost:6554/telzir_test?schema=public"
+}
+
+
+model PriceList {
+  id          String  @id @default(uuid())
+  origin      String
+  destiny     String
+  price       Float
+  create_at   DateTime @default(now())
+}

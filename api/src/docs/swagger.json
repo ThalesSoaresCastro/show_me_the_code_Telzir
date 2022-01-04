@@ -1,0 +1,476 @@
+{
+    "openapi":"3.0.0",
+    "info": {
+        "title":"Telzir API",
+        "description": "API com os valores de ligação de acordo com a origem e destino.",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url":"http://localhost:5050/",
+            "description":"API"
+        }
+    ],
+    "paths":{
+        "/addelement":{
+            "post":{
+                "summary": "Cadastro de elemento",
+                "description": "Cadastramento de um novo elemento.",
+                "tags": ["Elements"],
+                "requestBody":{
+                    "content":{
+                        "application/json":{
+                            "schema":{
+                                "$ref":"#/components/schemas/Element"
+                            },
+                            "examples":{
+                                "element":{
+                                    "value":{
+                                        "origin": "012",
+                                        "destiny": "013",
+                                        "price": 1.23
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses":{
+                    "422":{
+                        "description":"Param not exists or invalid data",
+                        "content":{
+                            "application/json":{
+                                "schema":{
+                                    "type":"object",
+                                    "$ref":"#/components/schemas/ElementError"      
+                                }
+                            }
+                        }
+                    },
+                    "400":{
+                        "description":"Element already exists.",
+                        "content":{
+                            "application/json":{
+                                "schema":{
+                                    "type":"object",
+                                    "$ref":"#/components/schemas/ResponseElement"      
+                                }
+                            }
+                        }
+                    },
+                    "201":{
+                        "description":"OK",
+                        "content":{
+                            "application/json":{
+                                "schema":{
+                                    "type":"object",
+                                    "$ref":"#/components/schemas/ResponseElement"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/updateelement/{id}":{
+            "put":{
+                "summary": "ALteração de informações",
+                "description": "Alterando informações de algum elemento.",
+                "tags": ["Elements"],
+                "parameters":[
+                    {
+                        "name":"id",
+                        "in":"path",
+                        "description": "ID do elemento",
+                        "required":"true"
+                    }
+                ],
+                "requestBody":{
+                    "content":{
+                        "application/json":{
+                            "schema":{
+                                "$ref":"#/components/schemas/Element"
+                            },
+                            "examples":{
+                                "element":{
+                                    "value":{
+                                        "origin": "014",
+                                        "destiny": "015",
+                                        "price": 2.34
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses":{
+                    "422":{
+                        "description":"Param not exists or invalid data",
+                        "content":{
+                            "application/json":{
+                                "schema":{
+                                    "type":"object",
+                                    "$ref":"#/components/schemas/ElementError"      
+                                }
+                            }
+                        }
+                    },
+                    "400":{
+                        "description":"Element not exists.",
+                        "content":{
+                            "application/json":{
+                                "schema":{
+                                    "type":"object",
+                                    "$ref":"#/components/schemas/ElementError"      
+                                }
+                            }
+                        }
+                    },
+                    "200":{
+                        "description":"Success on changing element.",
+                        "content":{
+                            "application/json":{
+                                "schema":{
+                                    "type":"object",
+                                    "$ref":"#/components/schemas/ResponseElement"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/deleteelement/{id}":{
+            "delete":{
+                "summary": "Deleta elemento",
+                "description": "Deleta algum elemento pelo seu id.",
+                "tags": ["Elements"],
+                "parameters":[
+                    {
+                        "name":"id",
+                        "in":"path",
+                        "description": "ID do elemento",
+                        "required":"true"
+                    }
+                ],
+                "responses":{
+                    "422":{
+                        "description":"ID not exists or Id Empty",
+                        "content":{
+                            "application/json":{
+                                "schema":{
+                                    "type":"object",
+                                    "$ref":"#/components/schemas/ElementError"      
+                                }
+                            }
+                        }
+                    },
+                    "400":{
+                        "description":"Element already exists.",
+                        "content":{
+                            "application/json":{
+                                "schema":{
+                                    "type":"object",
+                                    "$ref":"#/components/schemas/ResponseElement"      
+                                }
+                            }
+                        }
+                    },
+                    "200":{
+                        "description":"Success on deleting element.",
+                        "content":{
+                            "application/json":{
+                                "schema":{
+                                    "type":"object",
+                                    "$ref":"#/components/schemas/ResponseElement"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/onelement/{id}":{
+            "get":{
+                "summary": "Retorna informações de um elemento",
+                "description": "Retorna informações de um elemento de acordo com seu id.",
+                "tags": ["Elements"],
+                "parameters":[
+                    {
+                        "name":"id",
+                        "in":"path",
+                        "description": "ID do elemento",
+                        "required":"true"
+                    }
+                ],
+                "responses":{
+                    "422":{
+                        "description":"ID not exists",
+                        "content":{
+                            "application/json":{
+                                "schema":{
+                                    "type":"object",
+                                    "$ref":"#/components/schemas/ElementError"      
+                                }
+                            }
+                        }
+                    },
+                    "400":{
+                        "description":"Element not exists.",
+                        "content":{
+                            "application/json":{
+                                "schema":{
+                                    "type":"object",
+                                    "$ref":"#/components/schemas/ElementError"      
+                                }
+                            }
+                        }
+                    },
+                    "200":{
+                        "description":"Element exists.",
+                        "content":{
+                            "application/json":{
+                                "schema":{
+                                    "type":"object",
+                                    "$ref":"#/components/schemas/ResponseElement"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/allelements":{
+            "get":{
+                "summary": "Retorna todos os elementos",
+                "description": "Retorna todos os elementos do banco.",
+                "tags": ["Elements"],
+                "responses":{
+                    "400":{
+                        "description":"There are no registered elements.",
+                        "content":{
+                            "application/json":{
+                                "schema":{
+                                    "type":"object",
+                                    "$ref":"#/components/schemas/ElementError"      
+                                }
+                            }
+                        }
+                    },
+                    "200":{
+                        "description":"All exists.",
+                        "content":{
+                            "application/json":{
+                                "schema":{
+                                    "type":"object",
+                                    "$ref":"#/components/schemas/ResponseArrayElement"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/cost":{
+            "post":{
+                "summary": "Cálculo de custo",
+                "description": "Calcula o valor da ligação.",
+                "tags": ["Cost"],
+                "requestBody":{
+                    "content":{
+                        "application/json":{
+                            "schema":{
+                                "$ref":"#/components/schemas/CostElement"
+                            },
+                            "examples":{
+                                "cost":{
+                                    "value":{
+                                        "origin": "011",
+                                        "destiny": "017",
+                                        "plan": 30,
+                                        "time": 60
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses":{
+                    "422":{
+                        "description":"Param not exists or invalid data",
+                        "content":{
+                            "application/json":{
+                                "schema":{
+                                    "type":"object",
+                                    "$ref":"#/components/schemas/ElementError"      
+                                }
+                            }
+                        }
+                    },
+                    "400":{
+                        "description":"Error! Element not exists.",
+                        "content":{
+                            "application/json":{
+                                "schema":{
+                                    "type":"object",
+                                    "$ref":"#/components/schemas/ElementError"      
+                                }
+                            }
+                        }
+                    },
+                    "200":{
+                        "description":"Complete costing process.",
+                        "content":{
+                            "application/json":{
+                                "schema":{
+                                    "type":"object",
+                                    "$ref":"#/components/schemas/ResponseCostElement"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components":{
+        "schemas":{
+            "ElementError":{
+                "type":"object",
+                "properties":{
+                    "message":{
+                        "type":"string"
+                    },
+                    "element":{
+                        "type":null
+                    }
+                }
+            },
+            "Element":{
+                "type":"object",
+                "properties":{
+                    "origin":{
+                        "type":"string"
+                    },
+                    "destiny":{
+                        "type":"string"
+                    },
+                    "price":{
+                        "type":"number"
+                    }
+                }
+            },
+            "CostElement":{
+                "type":"object",
+                "properties":{
+                    "origin":{
+                        "type":"string"
+                    },
+                    "destiny":{
+                        "type":"string"
+                    },
+                    "plan":{
+                        "type":"number"
+                    },
+                    "time":{
+                        "type":"number"
+                    }
+                }
+            },
+            
+            "ResponseCostElement":{
+                "type":"object",
+                "properties": {
+                    "message": {
+                        "type":"string"
+                    },
+                    "element":{
+                        "type": "object",
+                        "properties":{
+                            "id":{
+                                "type":"string"
+                            },
+                            "origin":{
+                                "type":"string"
+                            },
+                            "destiny":{
+                                "type":"string"
+                            },
+                            "plan":{
+                                "type":"number"
+                            },
+                            "time":{
+                                "type":"number"
+                            },
+                            "costPlan":{
+                                "type":"number"
+                            },
+                            "costNotPlan":{
+                                "type":"number"
+                            }
+                        }
+                    }
+                }
+            },
+            "ResponseElement":{
+                "type":"object",
+                "properties": {
+                    "message": {
+                        "type":"string"
+                    },
+                    "element":{
+                        "type": "object",
+                        "properties":{
+                            "id":{
+                                "type":"string"
+                            },
+                            "origin":{
+                                "type":"string"
+                            },
+                            "destiny":{
+                                "type":"string"
+                            },
+                            "price":{
+                                "type":"number"
+                            },
+                            "created_at":{
+                                "type":"string"
+                            }
+                        }
+                    }
+                }
+            },
+            "ResponseArrayElement":{
+                "type":"object",
+                "properties": {
+                    "message": {
+                        "type":"string"
+                    },
+                    "element":{
+                        "type": "array",
+                        "items":{
+                            "properties":{
+                                    "id":{
+                                        "type":"string"
+                                    },
+                                    "origin":{
+                                        "type":"string"
+                                    },
+                                    "destiny":{
+                                        "type":"string"
+                                    },
+                                    "price":{
+                                        "type":"number"
+                                    },
+                                    "created_at":{
+                                        "type":"string"
+                                    }
+                            }
+                        }   
+                    }
+                }
+            }
+        }
+    }
+
+}

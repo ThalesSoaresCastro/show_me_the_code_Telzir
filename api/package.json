@@ -1,0 +1,46 @@
+{
+  "name": "api",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "dev": "npx nodemon --exec ts-node -r tsconfig-paths/register --files --transpile-only --ignore node_modules src/server.ts",
+    "test": "jest --detectOpenHandles",
+    "create:testEnv": "export NODE_ENV=test || set NODE_ENV=test && npm run create:StringDev",
+    "build": "tsc -p tsconfig.json",
+    "db:createTables": "yarn prisma db push",
+    "create:StringDev": "ts-node createStringConnectionDB.ts",
+    "start-build": "node --trace-warnings -r ts-node/register/transpile-only -r tsconfig-paths/register ./dist/src/server.js",
+    "start-prod": "yarn build && node --trace-warnings -r ts-node/register/transpile-only -r tsconfig-paths/register ./dist/src/server.js"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.12",
+    "@types/dotenv": "^8.2.0",
+    "@types/express": "^4.17.13",
+    "@types/jest": "^27.0.3",
+    "@types/morgan": "^1.9.3",
+    "@types/node": "^17.0.5",
+    "@types/supertest": "^2.0.11",
+    "@types/swagger-ui-express": "^4.1.3",
+    "jest": "^27.4.5",
+    "jest-mock-extended": "^2.0.4",
+    "nodemon": "^2.0.15",
+    "prisma": "^3.7.0",
+    "supertest": "^6.1.6",
+    "ts-jest": "^27.1.2",
+    "ts-node": "^10.4.0",
+    "tsconfig-paths": "^3.12.0",
+    "tscpaths": "^0.0.9",
+    "typescript": "^4.5.4"
+  },
+  "dependencies": {
+    "@prisma/client": "^3.7.0",
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.2",
+    "morgan": "^1.10.0",
+    "pg": "^8.7.1",
+    "swagger-ui-express": "^4.3.0",
+    "winston": "^3.3.3"
+  }
+}

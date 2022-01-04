@@ -1,0 +1,17 @@
+FROM node:17
+
+# Create app directory
+WORKDIR /app
+
+COPY package*.json /app/
+COPY tsconfig.json /app/
+
+RUN npm install -g tsc
+
+COPY . /app/
+
+RUN npm install 
+
+RUN npm run build
+
+RUN ls -a
