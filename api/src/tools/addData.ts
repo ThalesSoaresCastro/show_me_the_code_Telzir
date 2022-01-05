@@ -53,7 +53,10 @@ const AddDataBD = async()=>{
             email:userTest.email
         }
     });
-    console.log('\n ADMIN : ', dataCreated);
+    let respAdmin = dataCreated;
+    if(respAdmin)
+        respAdmin.password="admin";
+    console.log('\n ADMIN : ', respAdmin);
     console.log('\nUsuário ADMIN criado...\n');
 
     return {list, dataCreated};

@@ -57,7 +57,8 @@ const PrincipalViewComponent: React.FC<Props>= ({children}) => {
             <InfoIcon
               sx={{ fontSize: 35 }} 
               onClick={()=>{
-                Router.push('tableView');
+                //Router.push('tableView');
+                Router.push('admin');
               }}
             />
 
