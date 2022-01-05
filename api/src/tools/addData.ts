@@ -1,10 +1,16 @@
 import prismaClient from '@/prisma';
-
+import bcrypt from 'bcryptjs';
 interface Element{
     origin: string,
     destiny: string,
     price: number
 }
+interface IUser {
+    nome: string;
+    password: string;
+    email: string;
+}
+const salt:number = 8; 
 
 const AddDataBD = async()=>{
 
@@ -35,7 +41,22 @@ const AddDataBD = async()=>{
     console.log('Dados cadastrados: ', list);
     console.log('\nDados criados com sucesso...\n');
 
-    return list;
+    console.log('\nCadastro de ADMIN para a parte administrativa...\n');
+    const userTest = <IUser>{
+        nome:"admin",
+        email:"admin@mail.com",
+        password:bcrypt.hashSync("admin", salt)
+    }
+    await prismaClient.user.create({data:userTest});
+    let dataCreated = await prismaClient.user.findFirst({
+        where:{
+            email:userTest.email
+        }
+    });
+    console.log('\n ADMIN : ', dataCreated);
+    console.log('\nUsuário ADMIN criado...\n');
+
+    return {list, dataCreated};
 }
 
 export default AddDataBD;

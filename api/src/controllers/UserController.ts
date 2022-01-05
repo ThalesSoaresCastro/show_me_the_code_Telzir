@@ -11,9 +11,10 @@ interface IUser {
     password: string;
 }
 
+import Tools from "@/tools/tools";
 
 class UserController{
-    public async CreateNewUser(req: Request, res: Response){
+    async CreateNewUser(req: Request, res: Response){
         const element: IUser = <IUser>req.body;
 
         if( !element.nome || !element.email || !element.password){
@@ -22,6 +23,11 @@ class UserController{
 
         if( !element.nome.trim() || !element.email.trim() || !element.password.trim()){
             return res.status(422).json({message: "Invalid data.", user:{}});
+        }
+
+        if( !(await Tools.validation_email(element.email)) ){
+            res.status(400).json({ message: 'Invalid email, unauthorized user.' });
+            return;
         }
         
         const result = await UserService.newUser(element);
@@ -41,6 +47,11 @@ class UserController{
 
         if( !element.nome.trim() || !element.email.trim() || !element.password.trim() ){
             return res.status(422).json({message: "Invalid data.", user:{}});
+        }
+
+        if( !(await Tools.validation_email(element.email)) ){
+            res.status(400).json({ message: 'Invalid email, unauthorized user.' });
+            return;
         }
 
         const id = req.params.id;

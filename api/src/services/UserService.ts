@@ -8,7 +8,13 @@ interface IUser {
     password: string;
 }
 
-
+interface IUserReturn {
+    id?: string;
+    nome?: string;
+    email: string;
+    password?:string;
+    create_at?: Date;
+}
 
 const salt:number = 8; 
 
@@ -23,6 +29,9 @@ class UserService {
                 ]
             }
         })
+
+        let userResult:IUserReturn;
+
         if(!element){
             let elementEncrypt:IUser = {
                 nome:new_user.nome,
@@ -41,13 +50,22 @@ class UserService {
                 data:elementEncrypt
             })
 
-            return {'message': 'New user created.', user: element};
+            userResult = element;
+            //Password não será retornado
+            delete userResult.password;
+
+            return {'message': 'New user created.', user: userResult};
         }
-        return {'message': 'User already exists.', user: element};
+        userResult = element;
+        //Password não será retornado
+        delete userResult.password;
+
+        return {'message': 'User already exists.', user: userResult};
     }
 
     async updateUser(update_user: IUser, userId: string){
         let element:IUser | any;
+        let userResult:IUserReturn;
 
         element = await prismaClient.user.findFirst({
             where:{
@@ -70,49 +88,75 @@ class UserService {
                     password: update_user.password
                 }
             })
-
-            return {'message': 'Success on changing user.', user: element};
+            userResult = element;
+            //Password não será retornado
+            delete userResult.password;
+            return {'message': 'Success on changing user.', user: userResult};
         }catch(error){
             console.log('error: ', error);
         }
-        return {'message': 'Error in update user.', user:element};
+        userResult = element;
+        //Password não será retornado
+        delete userResult.password;
+        return {'message': 'Error in update user.', user:userResult};
     }
 
     async findAllUsers(){
         let elements = await prismaClient.user.findMany();
+
+        let arrayUserResult:Array<IUserReturn>;
+
         if(elements.length > 0){
-            return {'message': 'All users.' , user:elements};
+            arrayUserResult = elements;
+
+            arrayUserResult.map(element => {
+                delete element.password
+            });
+
+            return {'message': 'All users.' , user:arrayUserResult};
         }else{
             return {'message': 'There are no registered users.', user: elements};
         }
     }
 
     async findOneUser(id: string){
+        
         let element = await prismaClient.user.findFirst({
             where: {
                 id: id
             }
         });
+
         if(element){
-            return { 'message':'User exists.', user: element };
+            let userResult:IUserReturn = element;
+            //Password não será retornado
+            delete userResult.password;
+            return { 'message':'User exists.', user: userResult };
         }
         
         return {'message': 'User not exists', user:element };
     }
 
     async deleteUser(id: string){
+
+        let userResult:IUserReturn;
+
         let element = await prismaClient.user.findFirst({
             where: {
                 id: id
             }
         });
+
         if(element){
             await prismaClient.user.delete({
                 where:{
                     id: id
                 }
             })
-            return {'message': 'Success on deleting user.', user: element};
+            userResult = element;
+            //Password não será retornado
+            delete userResult.password;
+            return {'message': 'Success on deleting user.', user: userResult};
         }
         return {'message': 'User not exists', user: element};
     }
